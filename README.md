@@ -8,7 +8,7 @@ Focuses on _how_ you want to do something.
 Focus on _what_ you want to do.
 
 ### Example: Extract first name's from an array of people, ignore people missing first names
-Our array:
+Our array of awful input data:
 ```javascript
 const awfulInput = [
   {first: 'test-first-0', last: 'test-last-0'},
@@ -19,7 +19,7 @@ const awfulInput = [
   undefined
 ];
 ```
-Imperative:
+#### An Imperative solution:
 ```javascript
 const getFirstNamesI = (people = []) => {
   const firstNames = [];
@@ -36,15 +36,16 @@ const getFirstNamesI = (people = []) => {
   return firstNames;
 };
 ```
-- Sanity check input
-- Create a new `firstNames` array to hold our result
-- Declare and initialize a simple variable `i` to hold our array index
-- Declare and initialize a variable to cache the input array's length
-- As we iterate in our `for` loop
-  - if a person object is truthy has a value for the `first` property, place that value into our resulting array
-- return our result array
+This solution is heavily focused on _how_ we're going to arrive at an array of first names. Consider that we're:
+- Telling JS how we'd like to sanity check the input - making sure it's an array type in this case
+- Creating a new `firstNames` array to hold our result
+- Declaring and initializing simple variables for iteration and caching the input array's length
+- Telling JS exactly how we'd like to iterate - via a `for` loop in this case
+- As we iterate we ensure that each person must exist and have a `first` property
+- We then tell JS to place valid people into our `firstNames` results array
+- We then return our `firstNames` results array
 
-Declarative:
+#### A Declarative solution:
 ```javascript
 const getFirstNamesD = (people = []) => {
   if (!Array.isArray(people)) {
@@ -55,24 +56,47 @@ const getFirstNamesD = (people = []) => {
     .map(({first}) => first);
 };
 ```
-- Sanity check input
-- Filter out people which are are falsy or do not have first first names
-- Create an array of first names
+This solution is more focused on _what_ we'd like to achieve rather than _how_ we'll achieve it, consider that we're:
+- Telling JS how we'd like to sanity check the input - making sure it's an array type in this case
+- Giving JS a function to use to filter out invalid people
+- Giving JS a funciton to use to project the resulting array of first names 
 
-Consider the above using lodash:
+#### A (more) Declarative solution:
+We can even drop the initial data check if we use lodash (`_.filter` and `_.map` handle bad input):
 ```javascript
-const _ = require('lodash');
-
 const getFirstNamesL = (people = []) => {
   return _.map(
     _.filter(people, (person) => person && person.first),
     ({first}) => first
   );
 };
-
 ```
-- Note: _.filter and _.map handles bad input
-- This approach is even less to do with "how" we accomplish our goal.
+Now we're simply:
+- Giving JS a function to use to filter out invalid people
+- Giving JS a funciton to use to project the resulting array of first names 
+
+TODO --- clean up below here
+
+### Some original and stolen examples of imperative vs declarative appraches
+- TODO
+
+### The Varieties of Religious Experience:
+Dogma 1:
+The bottleneck isn't going to be this, really. I can think of exactly 1 instance at Walmart where something like a loop was a bottleneck (in memory log filtering in a stream of tons of logs). The slowest part of anything I've written aside from that was spent waiting for a response from an upstream service or from a database. YAGNI
+
+Dogma 2:
+OMG Declarative Good, Imperative Bad. Sheesh as if things were that simple.
+
+
+### Declarative notes:
+- In JavaScript, declarative code almost always depends upon abstractions which use imperative code.
+
+_.filter and _.map handle bad input
+
+TODO ---
+
+### Imperative Bad, Declarative Good?
+You're kidding right :) 
 
 Things you already know - but I'm reviewing so you can feel smart:
 filter -
