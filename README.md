@@ -94,7 +94,7 @@ const sumI = (...numbers) => {
 ```javascript
 const sumD = (...numbers) => numbers.reduce((sum, i) => sum + i, 0);
 ```
-- declaratively using recursion:
+- declaratively using recursion (this is fun, but v8 doesn't have tail-call optimization, so it's not ideal):
 ```javascript
 const sumR = (...numbers) => _.isEmpty(numbers) ? 0 : _.head(numbers) + sumD(..._.tail(numbers));
 ```
@@ -118,34 +118,20 @@ const reverseD = (...args) => args.reduce((accum, i) => [i].concat(accum), []);
 const reverseR = (...args) => _.isEmpty(args) ? [] : reverseD(..._.tail(args)).concat(_.head(args));
 ```
 
-### Common bits
-The reduce and recursive approaches share something in common, let's pull it out:
-```javascript
-const fold = (fn, acc, input) => _.isEmpty(input) ? acc : fold(fn(acc, _.head(input)), _.tail(input));
-```
-Now look at sum:
-```javascript
-const sumD2 = (...input) => fold((acc, i) => acc + i, 0, input);
-```
-and reverse:
-```javascript
-const reverseD2 = (...input) => fold((acc, i) => [i].concat(acc), [], input);
-```
-
+### TODO - declarative benefits
+TODO - edit below here
 
 ### The Varieties of Religious Experience:
-Dogma 1:
+OMG perf:
 The bottleneck isn't going to be this, really. I can think of exactly 1 instance at Walmart where something like a loop was a bottleneck (in memory log filtering in a stream of tons of logs). The slowest part of anything I've written aside from that was spent waiting for a response from an upstream service or from a database. YAGNI
 
-Dogma 2:
-OMG Declarative Good, Imperative Bad. Sheesh as if things were that simple.
 
 
 ### Imperative Bad, Declarative Good?
 You're kidding right :) 
 
 Things you already know - but I'm reviewing so you can feel smart:
-filter -
-map -
-reduce -
+filter - you know, it filters
+map - projection
+reduce - fold - transforms a collection into a single value (which can be another single collection BTW)
 forEach - this is reserved for side effects. You're not projecting a list like map or filtering a list
