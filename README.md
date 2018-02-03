@@ -78,7 +78,7 @@ Now we're simply:
 ### Declarative notes:
 - Declarative code almost always depends upon abstractions which use imperative code.
 
-### Loops
+### Loops / recursion
 Let's add things:
 - imperatively:
 ```javascript
@@ -117,6 +117,8 @@ const reverseD = (...args) => args.reduce((accum, i) => [i].concat(accum), []);
 ```javascript
 const reverseR = (...args) => _.isEmpty(args) ? [] : reverseD(..._.tail(args)).concat(_.head(args));
 ```
+
+### Common bits
 The reduce and recursive approaches share something in common, let's pull it out:
 ```javascript
 const fold = (fn, acc, input) => _.isEmpty(input) ? acc : fold(fn(acc, _.head(input)), _.tail(input));
@@ -130,12 +132,6 @@ and reverse:
 const reverseD2 = (...input) => fold((acc, i) => [i].concat(acc), [], input);
 ```
 
-
-
-TODO --- clean up below here
-
-### Some original and stolen examples of imperative vs declarative appraches
-- TODO
 
 ### The Varieties of Religious Experience:
 Dogma 1:
