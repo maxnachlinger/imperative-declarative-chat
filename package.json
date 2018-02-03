@@ -1,0 +1,21 @@
+{
+  "name": "imperative-declarative-chat",
+  "version": "1.0.0",
+  "description": "An exploration of some ideas around declarative vs imperative approaches",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxnachlinger/imperative-declarative-chat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maxnachlinger/imperative-declarative-chat/issues"
+  },
+  "homepage": "https://github.com/maxnachlinger/imperative-declarative-chat#readme",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}

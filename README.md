@@ -73,7 +73,64 @@ const getFirstNamesL = (people = []) => {
 ```
 Now we're simply:
 - Giving JS a function to use to filter out invalid people
-- Giving JS a funciton to use to project the resulting array of first names 
+- Giving JS a function to use to project the resulting array of first names 
+
+### Declarative notes:
+- Declarative code almost always depends upon abstractions which use imperative code.
+
+### Loops
+Let's add things:
+- imperatively:
+```javascript
+const sumI = (...numbers) => {
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) {
+    sum += numbers[i];
+  }
+  return sum;
+}
+```
+- declaratively using`reduce`:
+```javascript
+const sumD = (...numbers) => numbers.reduce((sum, i) => sum + i, 0);
+```
+- declaratively using recursion:
+```javascript
+const sumR = (...numbers) => _.isEmpty(numbers) ? 0 : _.head(numbers) + sumD(..._.tail(numbers));
+```
+Now let's reverse things:
+- imperatively:
+```javascript
+const reverseI = (...args) => {
+  const result = [];
+  for (let i = args.length-1, j = 0; i >= 0; i--, j++) {
+    result[j] = args[i];
+  }
+  return result;
+}
+```
+- declaratively using`reduce`:
+```javascript
+const reverseD = (...args) => args.reduce((accum, i) => [i].concat(accum), []);
+```
+- declaratively using recursion:
+```javascript
+const reverseR = (...args) => _.isEmpty(args) ? [] : reverseD(..._.tail(args)).concat(_.head(args));
+```
+The reduce and recursive approaches share something in common, let's pull it out:
+```javascript
+const fold = (fn, acc, input) => _.isEmpty(input) ? acc : fold(fn(acc, _.head(input)), _.tail(input));
+```
+Now look at sum:
+```javascript
+const sumD2 = (...input) => fold((acc, i) => acc + i, 0, input);
+```
+and reverse:
+```javascript
+const reverseD2 = (...input) => fold((acc, i) => [i].concat(acc), [], input);
+```
+
+
 
 TODO --- clean up below here
 
@@ -87,13 +144,6 @@ The bottleneck isn't going to be this, really. I can think of exactly 1 instance
 Dogma 2:
 OMG Declarative Good, Imperative Bad. Sheesh as if things were that simple.
 
-
-### Declarative notes:
-- In JavaScript, declarative code almost always depends upon abstractions which use imperative code.
-
-_.filter and _.map handle bad input
-
-TODO ---
 
 ### Imperative Bad, Declarative Good?
 You're kidding right :) 
