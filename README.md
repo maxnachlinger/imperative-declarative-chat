@@ -64,7 +64,7 @@ This solution is more focused on _what_ we'd like to achieve rather than _how_ w
 #### A (more) Declarative solution:
 We can even drop the initial data check if we use lodash (`_.filter` and `_.map` handle bad input):
 ```javascript
-const getFirstNamesL = (people = []) => {
+const getFirstNamesD2 = (people = []) => {
   return _.map(
     _.filter(people, (person) => person && person.first),
     ({first}) => first
@@ -78,26 +78,63 @@ Now we're simply:
 ### Declarative notes:
 - Declarative code almost always depends upon abstractions which use imperative code.
 
-### Loops / recursion
-Let's add things:
-- imperatively:
+### Things people usually do via imperative code, but they don't have to:
+
+#### Loops
+Summarizing things in an array - get the counts of last and first names: 
 ```javascript
-const sumI = (...numbers) => {
-  let sum = 0;
-  for (let i = 0; i < numbers.length; i++) {
-    sum += numbers[i];
+const testInput = [
+  {first: 'test-first-0', last: 'test-last-0'},
+  {first: 'test-first-1', last: 'test-last-1'},
+  {first: 'test-first-2', last: 'test-last-2'},
+  {first: 'test-first-2', last: 'test-last-3'},
+  {first: 'test-first-2', last: 'test-last-2'}
+];
+
+// imperatively
+const getNameMetricsI = (input) => {
+  const ret = {};
+  for (let i = 0; i < input.length; i++) {
+    const { first, last } = input[i];
+    ret[last] = (ret[last] || 0) + 1;
+    ret[first] = (ret[first] || 0) + 1;
   }
-  return sum;
+  return ret;
+}
+
+// declarativly
+const getNameMetricsD = (input) => input.reduce((accum, { first, last }) => ({
+  ...accum,
+  [last]: (accum[last] || 0) + 1,
+  [first]: (accum[first] || 0) + 1
+}), {});
+
+// hmm - how to classify this?
+const getNameMetricsU = (input) => {
+  const ret = {};
+  _.forEach(input, ({last, first}) => {
+    ret[last] = (ret[last] || 0) + 1;
+    ret[first] = (ret[first] || 0) + 1;
+  });
+  return ret;
 }
 ```
-- declaratively using`reduce`:
-```javascript
-const sumD = (...numbers) => numbers.reduce((sum, i) => sum + i, 0);
-```
-- declaratively using recursion (this is fun, but v8 doesn't have tail-call optimization, so it's not ideal):
-```javascript
-const sumR = (...numbers) => _.isEmpty(numbers) ? 0 : _.head(numbers) + sumD(..._.tail(numbers));
-```
+
+
+
+### TODO Better uses
+#### I want to count the numbers of Smiths and stop after I've found 2 Smiths
+-- for loop to count
+-- _.forEach loop to count, return false, the return false bit is imperative, we're
+telling this how to iterate
+-- reduce - discussion about reduce and why it's clearer
+
+
+
+
+
+
+
 Now let's reverse things:
 - imperatively:
 ```javascript
@@ -109,13 +146,13 @@ const reverseI = (...args) => {
   return result;
 }
 ```
-- declaratively using`reduce`:
+- declaratively using `reduce`:
 ```javascript
 const reverseD = (...args) => args.reduce((accum, i) => [i].concat(accum), []);
 ```
-- declaratively using recursion:
+- declaratively using recursion (for fun, but v8 doesn't have tail-call optimization, so don't use this):
 ```javascript
-const reverseR = (...args) => _.isEmpty(args) ? [] : reverseD(..._.tail(args)).concat(_.head(args));
+const reverseR = (...args) => _.isEmpty(args) ? [] : reverseR(..._.tail(args)).concat(_.head(args));
 ```
 
 ### TODO - declarative benefits
