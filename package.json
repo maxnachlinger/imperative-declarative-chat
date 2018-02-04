@@ -16,6 +16,8 @@
   },
   "homepage": "https://github.com/maxnachlinger/imperative-declarative-chat#readme",
   "dependencies": {
-    "lodash": "^4.17.4"
+    "benchmark": "^2.1.4",
+    "lodash": "^4.17.4",
+    "microtime": "^2.1.7"
   }
 }

@@ -1,25 +1,22 @@
-const unfold = (fn) => (initialValue) => {
+const unfold = (fn, initialValue) => {
   const accum = [];
   const stack = [initialValue];
 
-  while (stack.length > 0) {
-    const value = stack.pop();
-    const {result, next, done} = fn(value) || {done: true};
+  while (true) {
+    const result = fn(stack.pop()) || {done: true};
 
-    if (done) {
-      continue;
+    if (result.done) {
+      return accum;
     }
 
-    accum.push(result);
-    stack.push(next);
+    accum.push(result.result);
+    stack.push(result.next);
   }
-
-  return accum;
 }
 
-const rangePositive = (start, end) => unfold((x) => x <= end ? {result: x, next: x + 1} : null)(start);
+const rangePositive = (start, end) => unfold((x) => x <= end ? {result: x, next: x + 1} : null, start);
 
-const rangeNegative = (start, end) => unfold((x) => x >= end ? {result: x, next: x - 1} : null)(start);
+const rangeNegative = (start, end) => unfold((x) => x >= end ? {result: x, next: x - 1} : null, start);
 
 console.log(
   rangePositive(-2, 2),
