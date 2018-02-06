@@ -59,11 +59,13 @@ const getFirstNamesD = (people = []) => {
 This solution is more focused on _what_ we'd like to achieve rather than _how_ we'll achieve it, consider that we're:
 - Telling JS how we'd like to sanity check the input - making sure it's an array type in this case
 - Giving JS a function to use to filter out invalid people
-- Giving JS a funciton to use to project the resulting array of first names 
+- Giving JS a function to use to project the resulting array of first names 
 
 #### A (more) Declarative solution:
 We can even drop the initial data check if we use lodash (`_.filter` and `_.map` handle bad input):
 ```javascript
+const _ = require('lodash');
+
 const getFirstNamesD2 = (people = []) => {
   return _.map(
     _.filter(people, (person) => person && person.first),
@@ -78,97 +80,51 @@ Now we're simply:
 ### Declarative notes:
 - Declarative code almost always depends upon abstractions which use imperative code.
 
-### Things people usually do via imperative code, but they don't have to:
-
-#### Loops
-Summarizing things in an array - get the counts of last and first names: 
+### More examples:
+Extract the first person with the last name 'test-last-2' and return them: 
 ```javascript
+const _ = require('lodash');
+
 const testInput = [
-  {first: 'test-first-0', last: 'test-last-0'},
-  {first: 'test-first-1', last: 'test-last-1'},
-  {first: 'test-first-2', last: 'test-last-2'},
-  {first: 'test-first-2', last: 'test-last-3'},
-  {first: 'test-first-2', last: 'test-last-2'}
+  {id: 1, first: 'test-first-0', last: 'test-last-0'},
+  {id: 2, first: 'test-first-1', last: 'test-last-1'},
+  {id: 3, first: 'test-first-2', last: 'test-last-2'},
+  {id: 4, first: 'test-first-2', last: 'test-last-3'},
+  {id: 5, first: 'test-first-2', last: 'test-last-2'}
 ];
 
 // imperatively
-const getNameMetricsI = (input) => {
-  const ret = {};
+const getPersonI = (input) => {
   for (let i = 0; i < input.length; i++) {
-    const { first, last } = input[i];
-    ret[last] = (ret[last] || 0) + 1;
-    ret[first] = (ret[first] || 0) + 1;
+    const person = input[i];
+    if (person.last === 'test-last-2') {
+      return person;
+    }
   }
-  return ret;
+  return null;
 }
 
-// declarativly
-const getNameMetricsD = (input) => input.reduce((accum, { first, last }) => ({
-  ...accum,
-  [last]: (accum[last] || 0) + 1,
-  [first]: (accum[first] || 0) + 1
-}), {});
+// declaratively
+const getPersonD = (input) => input.find((person) => person.last === 'test-last-2');
 
-// hmm - how to classify this?
-const getNameMetricsU = (input) => {
-  const ret = {};
-  _.forEach(input, ({last, first}) => {
-    ret[last] = (ret[last] || 0) + 1;
-    ret[first] = (ret[first] || 0) + 1;
+// how do you classify this?
+// quoting the lodash _.foreach docs:
+//  Iteratee functions may exit iteration early by explicitly returning false.
+
+const getPersonU = (input) => {
+  let ret = null;
+  _.forEach(input, (person) => {
+    if (person.last === 'test-last-2') {
+      ret = person;
+      return false;
+    }
   });
   return ret;
 }
+
+console.log(
+  getPersonI(testInput),
+  getPersonD(testInput),
+  getPersonU(testInput)
+);
 ```
-
-
-
-### TODO Better uses
-#### I want to count the numbers of Smiths and stop after I've found 2 Smiths
--- for loop to count
--- _.forEach loop to count, return false, the return false bit is imperative, we're
-telling this how to iterate
--- reduce - discussion about reduce and why it's clearer
-
-
-
-
-
-
-
-Now let's reverse things:
-- imperatively:
-```javascript
-const reverseI = (...args) => {
-  const result = [];
-  for (let i = args.length-1, j = 0; i >= 0; i--, j++) {
-    result[j] = args[i];
-  }
-  return result;
-}
-```
-- declaratively using `reduce`:
-```javascript
-const reverseD = (...args) => args.reduce((accum, i) => [i].concat(accum), []);
-```
-- declaratively using recursion (for fun, but v8 doesn't have tail-call optimization, so don't use this):
-```javascript
-const reverseR = (...args) => _.isEmpty(args) ? [] : reverseR(..._.tail(args)).concat(_.head(args));
-```
-
-### TODO - declarative benefits
-TODO - edit below here
-
-### The Varieties of Religious Experience:
-OMG perf:
-The bottleneck isn't going to be this, really. I can think of exactly 1 instance at Walmart where something like a loop was a bottleneck (in memory log filtering in a stream of tons of logs). The slowest part of anything I've written aside from that was spent waiting for a response from an upstream service or from a database. YAGNI
-
-
-
-### Imperative Bad, Declarative Good?
-You're kidding right :) 
-
-Things you already know - but I'm reviewing so you can feel smart:
-filter - you know, it filters
-map - projection
-reduce - fold - transforms a collection into a single value (which can be another single collection BTW)
-forEach - this is reserved for side effects. You're not projecting a list like map or filtering a list
