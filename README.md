@@ -135,3 +135,4 @@ Nope, you don't need them.
 - `Array.map()` - creates a new array with the results of calling a provided function on every element in the calling array. Array is a functor.
 - `Array.reduce()` - transforms an array using an accumulator value and each element in an array resulting in a single value. That single value can of course be another array, an object with data about someone named Larry. Anything.
 
+### Hey what about while() loops?
