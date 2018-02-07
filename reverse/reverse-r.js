@@ -1,4 +1,6 @@
 const _ = require('lodash');
+
+// v8 is not tail call optimized, don't use this
 const reverseD = (...args) => _.isEmpty(args) ? [] : reverseD(..._.tail(args)).concat(_.head(args));
 
 console.log(

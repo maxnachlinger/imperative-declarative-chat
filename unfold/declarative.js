@@ -37,4 +37,5 @@ console.log(
 // in case you're curious about <path d="">'s format
 // M - move to x,y
 // L - line to x,y
-// Z - draw a line from the current position back to M
+// Z - draw a line from the current position back to the start of L
+
