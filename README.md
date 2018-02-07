@@ -128,3 +128,10 @@ console.log(
   getPersonU(testInput)
 );
 ```
+### Loops
+Nope, you don't need them.
+- `Array.filter()` - creates a new array of all the elements in an existing array that pass the test implemented by the provided function.
+- `Array.find()` - gets the value of the first element that passes the test implemented by the provided function.
+- `Array.map()` - creates a new array with the results of calling a provided function on every element in the calling array. Array is a functor.
+- `Array.reduce()` - transforms an array using an accumulator value and each element in an array resulting in a single value. That single value can of course be another array, an object with data about someone named Larry. Anything.
+
