@@ -109,7 +109,7 @@ const getPersonD = (input) => input.find((person) => person.last === 'test-last-
 
 // how do you classify this?
 // quoting the lodash _.foreach docs:
-//  Iteratee functions may exit iteration early by explicitly returning false.
+// "Iteratee functions may exit iteration early by explicitly returning false."
 
 const getPersonU = (input) => {
   let ret = null;
@@ -136,3 +136,18 @@ Nope, you don't need them.
 - `Array.reduce()` - transforms an array using an accumulator value and each element in an array resulting in a single value. That single value can of course be another array, an object with data about someone named Larry. Anything.
 
 ### Hey what about while() loops?
+Yes. Unfold.
+```javascript
+// imperative
+let i = 0;
+while (i + 1 < 10) {
+  i++;
+}
+console.log(i); // 9
+
+// declarative
+const unfold = require('unfold-with');
+
+const j = unfold((n) => n < 10 ? [n, n + 1] : null, 0).pop();
+console.log(j); // 9
+```

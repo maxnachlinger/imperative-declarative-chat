@@ -20,6 +20,6 @@
     "lodash": "^4.17.4",
     "microtime": "^2.1.7",
     "point-in-svg-polygon": "^1.0.20",
-    "unfold-with": "^2.0.3"
+    "unfold-with": "^3.0.0"
   }
 }

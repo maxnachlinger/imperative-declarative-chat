@@ -14,10 +14,10 @@ const getPathRectFromPoint = (d, centerPoint) => {
   // on the given y axis, and find the top and bottom most y on the given x axis
   const inside = insidePolygon(d);
 
-  const {x: xMin} = unfold((p) => inside(p) ? {value: p, nextValue: {...p, x: p.x - 1}} : null, centerPoint).pop();
-  const {x: xMax} = unfold((p) => inside(p) ? {value: p, nextValue: {...p, x: p.x + 1}} : null, centerPoint).pop();
-  const {y: yMin} = unfold((p) => inside(p) ? {value: p, nextValue: {...p, y: p.y - 1}} : null, centerPoint).pop();
-  const {y: yMax} = unfold((p) => inside(p) ? {value: p, nextValue: {...p, y: p.y + 1}} : null, centerPoint).pop();
+  const {x: xMin} = unfold((p) => inside(p) ? [p, {...p, x: p.x - 1}] : null, centerPoint).pop();
+  const {x: xMax} = unfold((p) => inside(p) ? [p, {...p, x: p.x + 1}] : null, centerPoint).pop();
+  const {y: yMin} = unfold((p) => inside(p) ? [p, {...p, y: p.y - 1}] : null, centerPoint).pop();
+  const {y: yMax} = unfold((p) => inside(p) ? [p, {...p, y: p.y + 1}] : null, centerPoint).pop();
 
   return {
     x: _.round(xMin, 2),
